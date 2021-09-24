@@ -84,8 +84,6 @@ RUN sh -c "$(wget -O- $OHMYZSH_URL)" "" --unattended &> /dev/null
 RUN git clone $AUTOCOMPLETEZSH_URL /home/$USERNAME/.oh-my-zsh/custom/plugins/zsh-autocomplete
 ENV ENV="/home/$USERNAME/.ashrc"
 RUN ZSH=/home/$USERNAME/.oh-my-zsh
-#completion for operator sdk
-RUN operator-sdk completion zsh > "/home/$USERNAME/.oh-my-zsh/custom/plugins/zsh-autocomplete/functions/completion/_operator-sdk"
 #zsh config
 RUN echo 'autoload -Uz compinit' >>~/.zshrc
 RUN echo 'compinit' >> ~/.zshrc
