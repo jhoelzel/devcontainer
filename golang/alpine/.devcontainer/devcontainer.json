@@ -1,0 +1,57 @@
+{
+	"name": "Golang Development Environment",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"GO_VERSION": "1.16",
+			"ARCH": "amd64",
+			"ALPINE_VERSION": "3.14",
+			"TIMEZONE": "Europe/Berlin",
+			"LOCALE": "en_US.UTF-8"
+		}
+	},
+	"appPort": [ 6969,6970], 
+	"remoteUser": "vscode",
+	//Setup Workspacemounts and workspace folders
+	"workspaceFolder": "/go/src/github.com/jhoelzel",
+	"workspaceMount": "src=${localWorkspaceFolder},dst=/go/src/github.com/jhoelzel,type=bind,consistency=cached",
+	//Mount the host docker socket for acces
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+	],
+	//vs code settings
+	"settings": {
+		"go.toolsManagement.checkForUpdates": "local",
+		"go.useLanguageServer": true,
+		"go.gopath": "/go",
+		"go.goroot": "/usr/local/go",
+		"terminal.integrated.profiles.linux": {
+			"zsh (login)": {
+			  "path": "zsh",
+			  "args": ["-l"]
+			}
+		}
+	},
+	//Vs Code extentions
+	"extensions": [
+		"golang.Go",
+		"ms-vscode.go",
+		"davidanson.vscode-markdownlint",
+		"shardulm94.trailing-spaces",
+		"IBM.output-colorizer",
+		"ms-kubernetes-tools.vscode-kubernetes-tools", //kubernetes ms tools
+		"redhat.vscode-yaml" // Kubernetes, Drone syntax highlighting
+	],
+	//"postCreateCommand": "go mod download",
+	"runArgs": [
+		"--cap-add=SYS_PTRACE", //Trace arbitrary processes using ptrace(2).
+		"--security-opt",
+		"seccomp=unconfined", //we dont pass a seccomp profile because this is a dev enrionment
+		// map SSH + kube keys 
+		 "-v",
+		 "${env:HOME}${env:USERPROFILE}/.ssh/github_rsa:/home/vscode/.ssh/id_rsa:ro",
+		 "-v",
+		 "${env:HOME}${env:USERPROFILE}/.ssh/github_rsa.pub:/home/vscode/.ssh/id_rsa.pub:ro"
+	 ]
+}
+
